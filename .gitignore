@@ -31,7 +31,11 @@ ENV/
 *.swo
 
 # Ignore all files in the src directory
-src/*
+# Only ignore cache and temporary files in the src directory
+src/__pycache__/
+src/*.pyc
+src/*.pyo
+src/*.pyd
 
 # Ignore all files in the tests directory
 tests/*
