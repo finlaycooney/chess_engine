@@ -95,7 +95,27 @@ class MoveGenerator:
                 if target and target.color != pawn.color:
                     moves.append(Move(pawn.position, new_pos))
         
-        # Add en passant captures here
+        # En passant
+
+        if len(self.board.move_history) > 0:
+            last_move = self.board.move_history[-1]
+            
+            # Check if last move was a pawn double push
+            last_piece = self.board.get_piece(last_move.end_pos)
+            if (isinstance(last_piece, Pawn) and 
+                abs(int(last_move.start_pos[1]) - int(last_move.end_pos[1])) == 2):
+                
+                last_file, last_rank = self.board.get_coordinates(last_move.end_pos)
+                
+                # Check if our pawn is adjacent to the double-pushed pawn
+                if abs(file - last_file) == 1 and rank == last_rank:
+                    # Create en passant move
+                    new_pos = self.board.get_position(last_file, rank + direction)
+                    en_passant_move = Move(pawn.position, new_pos)
+                    en_passant_move.is_en_passant = True
+                    en_passant_move.captured_pos = last_move.end_pos  # Position of the captured pawn
+                    moves.append(en_passant_move)        
+        
         # Add promotion logic here
         
         return moves
